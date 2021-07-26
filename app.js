@@ -52,6 +52,18 @@ let middleImageIndex
 let rightImageIndex
 
 function renderThreeImages(){
+
+  leftImageIndex=getRandomIndex();
+    middleImageIndex=getRandomIndex();
+    rightImageIndex=getRandomIndex();
+    
+    while(leftImageIndex === rightImageIndex || leftImageIndex === middleImageIndex || rightImageIndex === middleImageIndex){
+            rightImageIndex=getRandomIndex();
+            middleImageIndex=getRandomIndex();
+        }
+    
+    console.log(leftImageIndex,middleImageIndex,rightImageIndex);
+
 leftImageIndex=getRandomIndex();
 middleImageIndex=getRandomIndex();
 rightImageIndex=getRandomIndex();
@@ -84,25 +96,33 @@ renderThreeImages();
 let imagesDiv=document.getElementById('images-div');
 imagesDiv.addEventListener('click',handleUserClick);
 
+leftImageElement.addEventListener('click',handleUserClick);
+middleImageElement.addEventListener('click',handleUserClick);
+rightImageElement.addEventListener('click',handleUserClick); 
+
 function handleUserClick (event){
-   console.log(event.target.id);
-   userAttemptsCounter++;
-    console.log(userAttemptsCounter);
- 
-if(userAttemptsCounter<maxAttempts){
-    if(event.target.id==='left-image'){
-        products[leftImageIndex].votes++;
-        console.log(products[leftImageIndex]);
-    }
-else if(event.target.id==='right-image'){
-    products[rightImageIndex].votes++;
-    console.log(products[rightImageIndex]);
-}
-else if(event.target.id==='middle-image'){
-        products[middleImageIndex].votes++;
-    console.log(products[middleImageIndex]);
-    }
-    renderThreeImages();
+    console.log(event.target.id);
+    userAttemptsCounter++;
+     console.log(userAttemptsCounter);
+
+     
+let imagesDiv=document.getElementById('images-div');
+imagesDiv.addEventListener('click',handleUserClick)
+  
+ if(userAttemptsCounter<maxAttempts){
+     if(event.target.id==='left-image'){
+         products[leftImageIndex].votes++;
+         console.log(products[leftImageIndex]);
+     }
+ else if(event.target.id==='right-image'){
+     products[rightImageIndex].votes++;
+     console.log(products[rightImageIndex]);
+ }
+ else if(event.target.id==='middle-image'){
+         products[middleImageIndex].votes++;
+     console.log(products[middleImageIndex]);
+     }
+     renderThreeImages();
 }
 else{
     for (let i = 0; i <products.length; i++){
