@@ -4,7 +4,7 @@ let leftImageElement=document.getElementById('left-image');
 let middleImageElement=document.getElementById('middle-image');
 let rightImageElement=document.getElementById('right-image');
 
-let maxAttempts=25;
+let maxAttempts=5;
 let userAttemptsCounter=0;
 
 let products=[];
@@ -14,7 +14,12 @@ function Products (name,src){
     this.shown=0;
     this.votes=0;
     products.push(this);
+    namesArr.push(this.name);
 }
+let namesArr=[];
+let votesArr=[];
+let shownArr=[];
+let numbers=[];
 
 new Products('bag.jpg','./amman-201d33/class-11/lab/assets/bag.jpg');
 new Products('banana.jpg','./amman-201d33/class-11/lab/assets/banana.jpg');
@@ -47,7 +52,8 @@ let middleImageIndex
 let rightImageIndex
 
 function renderThreeImages(){
-    leftImageIndex=getRandomIndex();
+
+  leftImageIndex=getRandomIndex();
     middleImageIndex=getRandomIndex();
     rightImageIndex=getRandomIndex();
     
@@ -58,19 +64,32 @@ function renderThreeImages(){
     
     console.log(leftImageIndex,middleImageIndex,rightImageIndex);
 
+leftImageIndex=getRandomIndex();
+middleImageIndex=getRandomIndex();
+rightImageIndex=getRandomIndex();
+
+while(leftImageIndex === rightImageIndex || leftImageIndex === middleImageIndex || rightImageIndex === middleImageIndex || numbers.includes(leftImageIndex)|| numbers.includes(middleImageIndex)|| numbers.includes(rightImageIndex)){
+        rightImageIndex=getRandomIndex();
+        middleImageIndex=getRandomIndex();
+    }
+    numbers=[leftImageIndex,rightImageIndex,middleImageIndex];
+
+console.log(leftImageIndex,middleImageIndex,rightImageIndex);
+
 console.log(products[leftImageIndex].name);
 console.log(products[middleImageIndex].name);
 console.log(products[rightImageIndex].name);
 
-leftImageElement.src=products
-[leftImageIndex].src;
+leftImageElement.src=products[leftImageIndex].src;
+products[leftImageIndex].shown++;
 
-middleImageElement.src=products
-[middleImageIndex].src;
 
-rightImageElement.src=products
-[rightImageIndex].src;
-console.log(products);
+middleImageElement.src=products[middleImageIndex].src;
+products[middleImageIndex].shown++;
+
+
+rightImageElement.src=products[rightImageIndex].src;
+products[rightImageIndex].shown++;
 }
 renderThreeImages();
 
@@ -106,6 +125,12 @@ imagesDiv.addEventListener('click',handleUserClick)
      renderThreeImages();
 }
 else{
+    for (let i = 0; i <products.length; i++){
+        console.log(products[i].votes);
+         votesArr.push(products[i].votes);
+    shownArr.push(products[i].shown);
+          }
+          showChart();
 
     let paragraph= document.createElement("button");
     imagesDiv.appendChild(paragraph);
@@ -121,7 +146,7 @@ function ViewResults(){
     for (let i=0;i<products.length;i++){
         let paragraphItem=document.createElement('li');
         paragraph.appendChild(paragraphItem);
-        paragraphItem.textContent=`${products[i].name}has ${products[i].votes}votes`
+        paragraphItem.textContent=`${products[i].name}has ${products[i].votes}votes,and was shown ${products[i].shown} times`;
     }
 }
 leftImageElement.removeEventListener('click',handleUserClick);
@@ -129,6 +154,73 @@ middleImageElement.removeEventListener('click',handleUserClick);
 rightImageElement.removeEventListener('click',handleUserClick);
 
 
+function showChart(){
+    let data ={
+      labels: namesArr,
+      datasets: [{
+        label: 'Votes',
+        data: votesArr,
+        backgroundColor:[
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      },
+      {
+        label: 'Shown',
+        data: shownArr,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      }
+    ]
+    };
+    let config = {
+      type: 'bar',
+      data: data,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    }; 
+    let myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+  }
 
 
 
